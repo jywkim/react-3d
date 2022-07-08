@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html, useProgress } from '@react-three/drei';
 import Shoe from './models/Shoe'; 
 import "./index.css";
+import { proxy } from 'valtio';
 
 const Loader = () => {
   const { progress } = useProgress();
@@ -18,7 +19,22 @@ const Loader = () => {
   );
 };
 
+
+
 export default function App() {
+   const state = proxy({
+      current: null,
+      items: {
+        laces: "#ff0000",
+        mesh: "#ffffff",
+        caps: "#ffffff",
+        inner: "#ffffff",
+        sole: "#ffffff",
+        stripes: "#ffffff",
+        band: "#ffffff",
+        patch: "#ffffff",
+      },
+    })
 
    return (
       <div>
@@ -30,8 +46,9 @@ export default function App() {
                height: '60vh',
             }}
          >
+            <ambientLight intensity={0.5} />
             <Suspense fallback={<Loader />}>
-              <Shoe/>
+              <Shoe state={state}/>
             </Suspense>
             <OrbitControls />
          </Canvas>
