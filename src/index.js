@@ -8,6 +8,7 @@ import {
   Footer,
   Home,
   Animation,
+  Shoe,
   About,
   Contact,
 } from "./components";
@@ -21,6 +22,7 @@ root.render(
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/animation" element={<Animation />} />
+      <Route path="/shoe" element={<Shoe />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
     </Routes>
