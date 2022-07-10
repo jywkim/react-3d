@@ -1,9 +1,10 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html, useProgress } from '@react-three/drei';
 import Shoe from './models/Shoe'; 
 import "./index.css";
 import { proxy, useSnapshot } from 'valtio';
+import { HexColorPicker } from 'react-colorful';
 
 const Loader = () => {
   const { progress } = useProgress();
@@ -22,7 +23,14 @@ const Loader = () => {
 const Picker = (props) => {
    const snap = useSnapshot(props.state)
    return (
-     <div className="picker">{snap.current}</div>
+   <div style={{ display: snap.current ? "block" : "none" }}>
+      <HexColorPicker 
+         className="picker" 
+         color={snap.items[snap.current]} 
+         onChange={(color) => (props.state.items[snap.current] = color)} 
+      />
+      <h1>{snap.current}</h1>
+   </div>
    );
 };
 
@@ -41,16 +49,6 @@ export default function App() {
       },
    });
 
-   const [hovered, setHovered] = useState(null);
-
-   const attributes = {
-      state: state, 
-      onPointerOver: (e) => {e.stopPropagation(); setHovered(e.object.material.name)},
-      onPointerOut: (e) => e.intersections.length === 0 && setHovered(null),
-      onPointerDown: (e) => {e.stopPropagation(); (state.current = e.object.material.name)},
-      onPointerMissed: (e) => (state.current = null),
-    };
-
    return (
       <>
          <Picker state={state} />
@@ -64,7 +62,7 @@ export default function App() {
          >
             <ambientLight intensity={0.5} />
             <Suspense fallback={<Loader />}>
-              <Shoe {...attributes}/>
+              <Shoe state={state}/>
             </Suspense>
             <OrbitControls />
          </Canvas>
